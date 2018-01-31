@@ -91,9 +91,11 @@ class TestNSURLRequest : XCTestCase {
         
         let urlA = URL(string: "http://swift.org")!
         let urlB = URL(string: "http://github.com")!
+        let jsonBody = try! JSONSerialization.data(withJSONObject: ["apple": "swift"], options: [])
         mutableRequest.mainDocumentURL = urlA
         mutableRequest.url = urlB
         mutableRequest.httpMethod = "POST"
+        mutableRequest.httpBody = jsonBody
         mutableRequest.setValue("application/json", forHTTPHeaderField: "Accept")
 
         guard let requestCopy1 = mutableRequest.copy() as? NSURLRequest else {
@@ -106,6 +108,8 @@ class TestNSURLRequest : XCTestCase {
         XCTAssertEqual(requestCopy1.mainDocumentURL, urlA)
         XCTAssertEqual(mutableRequest.httpMethod, "POST")
         XCTAssertEqual(requestCopy1.httpMethod, "POST")
+        XCTAssertEqual(mutableRequest.httpBody, jsonBody)
+        XCTAssertEqual(requestCopy1.httpBody, jsonBody)
         XCTAssertEqual(mutableRequest.url, urlB)
         XCTAssertEqual(requestCopy1.url, urlB)
         XCTAssertEqual(mutableRequest.allHTTPHeaderFields?["Accept"], "application/json")
@@ -118,9 +122,11 @@ class TestNSURLRequest : XCTestCase {
         mutableRequest.mainDocumentURL = urlC
         mutableRequest.url = urlD
         mutableRequest.httpMethod = "HEAD"
+        mutableRequest.httpBody = try! JSONSerialization.data(withJSONObject: ["foo": "bar"], options: [])
         mutableRequest.addValue("text/html", forHTTPHeaderField: "Accept")
         XCTAssertEqual(requestCopy1.mainDocumentURL, urlA)
         XCTAssertEqual(requestCopy1.httpMethod, "POST")
+        XCTAssertEqual(requestCopy1.httpBody, jsonBody)
         XCTAssertEqual(requestCopy1.url, urlB)
         XCTAssertEqual(requestCopy1.allHTTPHeaderFields?["Accept"], "application/json")
 
@@ -130,6 +136,7 @@ class TestNSURLRequest : XCTestCase {
         }
         XCTAssertEqual(requestCopy2.mainDocumentURL, urlA)
         XCTAssertEqual(requestCopy2.httpMethod, "POST")
+        XCTAssertEqual(requestCopy2.httpBody, jsonBody)
         XCTAssertEqual(requestCopy2.url, urlB)
         XCTAssertEqual(requestCopy2.allHTTPHeaderFields?["Accept"], "application/json")
     }
@@ -139,9 +146,11 @@ class TestNSURLRequest : XCTestCase {
         
         let urlA = URL(string: "http://swift.org")!
         let urlB = URL(string: "http://github.com")!
+        let jsonBody = try! JSONSerialization.data(withJSONObject: ["apple": "swift"], options: [])
         originalRequest.mainDocumentURL = urlA
         originalRequest.url = urlB
         originalRequest.httpMethod = "POST"
+        originalRequest.httpBody = jsonBody
         originalRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         
         guard let requestCopy = originalRequest.mutableCopy() as? NSMutableURLRequest else {
@@ -154,9 +163,11 @@ class TestNSURLRequest : XCTestCase {
         originalRequest.mainDocumentURL = urlC
         originalRequest.url = urlD
         originalRequest.httpMethod = "HEAD"
+        originalRequest.httpBody = try! JSONSerialization.data(withJSONObject: ["foo": "bar"], options: [])
         originalRequest.addValue("text/html", forHTTPHeaderField: "Accept")
         XCTAssertEqual(requestCopy.mainDocumentURL, urlA)
         XCTAssertEqual(requestCopy.httpMethod, "POST")
+        XCTAssertEqual(requestCopy.httpBody, jsonBody)
         XCTAssertEqual(requestCopy.url, urlB)
         XCTAssertEqual(requestCopy.allHTTPHeaderFields?["Accept"], "application/json")
     }
@@ -166,6 +177,7 @@ class TestNSURLRequest : XCTestCase {
         
         let urlA = URL(string: "http://swift.org")!
         let urlB = URL(string: "http://github.com")!
+        let jsonBody = try! JSONSerialization.data(withJSONObject: ["apple": "swift"], options: [])
         originalRequest.mainDocumentURL = urlA
         originalRequest.url = urlB
         originalRequest.httpMethod = "POST"
@@ -181,9 +193,11 @@ class TestNSURLRequest : XCTestCase {
         requestCopy.mainDocumentURL = urlC
         requestCopy.url = urlD
         requestCopy.httpMethod = "HEAD"
+        requestCopy.httpBody = try! JSONSerialization.data(withJSONObject: ["foo": "bar"], options: [])
         requestCopy.addValue("text/html", forHTTPHeaderField: "Accept")
         XCTAssertEqual(originalRequest.mainDocumentURL, urlA)
         XCTAssertEqual(originalRequest.httpMethod, "POST")
+        XCTAssertEqual(originalRequest.httpBody, jsonBody)
         XCTAssertEqual(originalRequest.url, urlB)
         XCTAssertEqual(originalRequest.allHTTPHeaderFields?["Accept"], "application/json")
     }
@@ -202,9 +216,11 @@ class TestNSURLRequest : XCTestCase {
         requestCopy.mainDocumentURL = urlC
         requestCopy.url = urlD
         requestCopy.httpMethod = "HEAD"
+        requestCopy.httpBody = try! JSONSerialization.data(withJSONObject: ["apple": "swift"], options: [])
         requestCopy.addValue("text/html", forHTTPHeaderField: "Accept")
         XCTAssertNil(originalRequest.mainDocumentURL)
         XCTAssertEqual(originalRequest.httpMethod, "GET")
+        XCTAssertNil(originalRequest.httpBody)
         XCTAssertEqual(originalRequest.url, urlA)
         XCTAssertNil(originalRequest.allHTTPHeaderFields)
     }
